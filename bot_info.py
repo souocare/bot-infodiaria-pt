@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import telepot, requests, time, pandas as pd
+import telepot
 import telepot.namedtuple
-from telepot.loop import MessageLoop
-from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 from others.weather import get_weatherinicialcity, get_weatheriniciallatlon, get_forecast_city, get_weather_city
 from others.jornais import showall_jornais, download_jornais
 from others.covid_dados import dados_covid
@@ -12,8 +10,6 @@ from others.covid_dados import dados_covid
 import traceback
 import datetime
 import os
-import glob
-import json
 import sqlite3
 from dotenv import load_dotenv
 
