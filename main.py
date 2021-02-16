@@ -183,7 +183,7 @@ if __name__ == '__main__':
             try:
                 if response[0]['message']['text'] == '/start' or \
                         response[0]['message']['text'] == '/ajuda' or \
-                        response[0]['message']['text'] == '/comecar':
+                        response[0]['message']['text'] == '/comecar' or response[0]['message']['text'] == 'Informação de utilização':
                     start_menu(response[0]["message"]['from']['id'])
 
                 elif response[0]['message']['text'] == '/guardar_local_tempo' \
