@@ -243,12 +243,17 @@ if __name__ == '__main__':
                     cursor.execute("select last_option from Users "
                                    "where [user_id] = {userid} ;".format(userid=chat_id))
                     check_idbd = cursor.fetchone()[0]
-                    if int(check_idbd) == 2:
-                        save_locationweather(chat_id)
-                    elif int(check_idbd) == 3:
-                        save_jornais(chat_id)
+                    if check_idbd == None:
+                        bot.sendMessage(chat_id=response[0]["message"]['from']['id'],
+                                text="De momento não é possivel obter a informação. Tente mais tarde",
+                                parse_mode='markdown')
                     else:
-                        pass
+                        if int(check_idbd) == 2:
+                            save_locationweather(chat_id)
+                        elif int(check_idbd) == 3:
+                            save_jornais(chat_id)
+                        else:
+                            pass
 
             except:
                 bot.sendMessage(chat_id=response[0]["message"]['from']['id'],
