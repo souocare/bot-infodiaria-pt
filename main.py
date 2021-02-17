@@ -17,7 +17,7 @@ load_dotenv()
 
 def start_menu(chatid):
     markup = telepot.namedtuple.ReplyKeyboardMarkup(
-        keyboard=[["Informação de utilização"], ['Guardar/Modificar Localização'], ["Modificar Jornais"], ["Obter Metereologia"], ["Obter Dados Covid"]])
+        keyboard=[["Informação de utilização"], ['Guardar/Modificar Localização'], ["Modificar Jornais"], ["Obter Metereologia"], ["Obter Dados Covid"], ["Obter Jornais"]])
 
     bot.sendMessage(chat_id=chatid,
                     text="Bem-vindo ao Bot das informações diárias. As informações diárias são enviadas diáriamente, "
@@ -126,7 +126,8 @@ if __name__ == '__main__':
                                     parse_mode='Markdown')
 
                     for jornal in jornais:
-                        bot.sendPhoto(chat_id=user[0], photo=os.getcwd() + "/others/jornais/" + str(jornal) + ".jpg")
+                        pf = open(os.getcwd() + "/others/jornais/" + str(jornal) + ".jpg", mode="rb")
+                        bot.sendPhoto(chat_id=user[0], photo=pf)
                         
                     if user[2] == None:
                         pass
@@ -246,12 +247,14 @@ if __name__ == '__main__':
                         try:
                             jornais = check_jornais.strip('][').split(', ')
                             for jornal in jornais:
-                                bot.sendPhoto(chat_id=chat_id, photo=os.getcwd() + "/others/jornais/" + str(jornal) + ".jpg")
+                                pf = open(os.getcwd() + "/others/jornais/" + str(jornal) + ".jpg", mode="rb")
+                                bot.sendPhoto(chat_id=chat_id, photo=pf)
                         except:
                             download_jornais()
                             jornais = check_jornais.strip('][').split(', ')
                             for jornal in jornais:
-                                bot.sendPhoto(chat_id=chat_id, photo=os.getcwd() + "/others/jornais/" + str(jornal) + ".jpg")
+                                pf = open(os.getcwd() + "/others/jornais/" + str(jornal) + ".jpg", mode="rb")
+                                bot.sendPhoto(chat_id=chat_id, photo=pf)
                             
                             
                     elif response[0]['message']['text'] == '/obter_dadoscovid' \

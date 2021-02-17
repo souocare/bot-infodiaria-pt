@@ -48,58 +48,58 @@ def download_jornais():
     for a in soup.findAll('img'):
         if 'alt="Correio da Manhã" data-original' in str(a):
             link = a["data-original"]
-            response = requests.get(link)
+            response = requests.get(str(link).replace("/th", ""))
 
-            file = open(os.getcwd() + "/jornais/" + "1." + link.split(".")[-1], "wb")
+            file = open(os.getcwd() + "/others/jornais/" + "1." + link.split(".")[-1], "wb")
             file.write(response.content)
             file.close()
         elif 'alt="Jornal de Notícias" data-original' in str(a):
             link = a["data-original"]
-            response = requests.get(link)
+            response = requests.get(str(link).replace("/th", ""))
 
-            file = open(os.getcwd() + "/jornais/" + "3." + link.split(".")[-1], "wb")
+            file = open(os.getcwd() + "/others/jornais/" + "3." + link.split(".")[-1], "wb")
             file.write(response.content)
             file.close()
         elif 'alt="Público" data-original' in str(a):
             link = a["data-original"]
-            response = requests.get(link)
+            response = requests.get(str(link).replace("/th", ""))
 
-            file = open(os.getcwd() + "/jornais/" + "4." + link.split(".")[-1], "wb")
+            file = open(os.getcwd() + "/others/jornais/" + "4." + link.split(".")[-1], "wb")
             file.write(response.content)
             file.close()
         elif 'alt="Diário de Notícias" data-original' in str(a):
             link = a["data-original"]
-            response = requests.get(link)
+            response = requests.get(str(link).replace("/th", ""))
 
-            file = open(os.getcwd() + "/jornais/" + "5." + link.split(".")[-1], "wb")
+            file = open(os.getcwd() + "/others/jornais/" + "5." + link.split(".")[-1], "wb")
             file.write(response.content)
             file.close()
         elif 'alt="A Bola" data-original' in str(a):
             link = a["data-original"]
-            response = requests.get(link)
+            response = requests.get(str(link).replace("/th", ""))
 
-            file = open(os.getcwd() + "/jornais/" + "6." + link.split(".")[-1], "wb")
+            file = open(os.getcwd() + "/others/jornais/" + "6." + link.split(".")[-1], "wb")
             file.write(response.content)
             file.close()
         elif 'alt="Record" data-original' in str(a):
             link = a["data-original"]
-            response = requests.get(link)
+            response = requests.get(str(link).replace("/th", ""))
 
-            file = open(os.getcwd() + "/jornais/" + "7." + link.split(".")[-1], "wb")
+            file = open(os.getcwd() + "/others/jornais/" + "7." + link.split(".")[-1], "wb")
             file.write(response.content)
             file.close()
         elif 'alt="O Jogo" data-original' in str(a):
             link = a["data-original"]
-            response = requests.get(link)
+            response = requests.get(str(link).replace("/th", ""))
 
-            file = open(os.getcwd() + "/jornais/" + "8." + link.split(".")[-1], "wb")
+            file = open(os.getcwd() + "/others/jornais/" + "8." + link.split(".")[-1], "wb")
             file.write(response.content)
             file.close()
         elif 'alt="Expresso" data-original' in str(a):
             link = a["data-original"]
-            response = requests.get(link)
+            response = requests.get(str(link).replace("/th", ""))
 
-            file = open(os.getcwd() + "/jornais/" + "9." + link.split(".")[-1], "wb")
+            file = open(os.getcwd() + "/others/jornais/" + "9." + link.split(".")[-1], "wb")
             file.write(response.content)
             file.close()
         else:
