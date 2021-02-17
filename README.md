@@ -14,7 +14,7 @@ python3 main.py
 And then, the program will be running.
 
 # Acknowledgements
-I need to thank VOST Portugal for making their API available about Covid-19 data in Portugal. And, of course, to the creator of Telepot module. 
+I need to thank Data Science for Social Good Portugal to make Covid-19 data in Portugal available easily for everyone, and VOST Portugal for making an API to use DSSG data. And, of course, to the creator of Telepot module. 
 
 # LICENSE
 This software is licensed under the MIT License. See the LICENSE file in the top distribution directory for the full license text. 
