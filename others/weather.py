@@ -75,7 +75,7 @@ def get_forecast_city(city):
 
     data_hoje = datetime.datetime.now()
 
-    print(information)
+    #print(information)
 
     for info_weather in information["list"]:
         datetime_weather = datetime.datetime.fromtimestamp(info_weather["dt"])

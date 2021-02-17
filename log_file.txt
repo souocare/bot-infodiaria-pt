@@ -1,7 +1,9 @@
 Traceback (most recent call last):
-  File "main.py", line 246, in <module>
-    if int(check_idbd) == 2:
-TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+  File "main.py", line 251, in <module>
+    dadoscovid = dados_covid()
+  File "/home/pi/Desktop/projects/bot_infogeral/bot-infodiaria-pt/others/covid_dados.py", line 25, in dados_covid
+    confirmados_hoje = list((hojereq["confirmados"]).values())[0]
+KeyError: 'confirmados'
 
 
 

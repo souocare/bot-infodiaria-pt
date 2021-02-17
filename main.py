@@ -37,14 +37,14 @@ def save_locationweather(chat_id):
         if str(info["cod"]) == "200":
             cursor.execute("Update Users "
                            "set [Loc_Meterologia] = '{loc}' "
-                           "wher [user_id] = {iduser} ;".format(iduser=chat_id,
+                           "where [user_id] = {iduser} ;".format(iduser=chat_id,
                                                                 loc=info["name"]))
             connection.commit()
 
             bot.sendMessage(chat_id=chat_id,
                             text="A localização foi guardada com sucesso! Foi guardada com a localidade "
                                  "***{cidade}***. Se não achar que é o "
-                                 "mais correto, indique o nome.", parse_mode='Markdown')
+                                 "mais correto, indique o nome. Abaixo, vai-lhe aparecer a metereologia para a localização dada.".format(cidade=info["name"]), parse_mode='Markdown')
         else:
             bot.sendMessage(chat_id=chat_id,
                             text="Não foi possivel guardar a localização. Por favor, tente "
@@ -58,13 +58,13 @@ def save_locationweather(chat_id):
             if str(info["cod"]) == "200":
                 cursor.execute("Update Users "
                                "set [Loc_Meterologia] = '{loc}' "
-                               "wher [user_id] = {iduser} ;".format(iduser=chat_id,
+                               "where [user_id] = {iduser} ;".format(iduser=chat_id,
                                                                     loc=info["name"]))
                 connection.commit()
                 bot.sendMessage(chat_id=chat_id,
                                 text="A localização foi guardada com sucesso! Foi guardada com a localidade "
                                      "***{cidade}***. Se não achar que é o "
-                                     "mais correto, indique o nome.", parse_mode='Markdown')
+                                     "mais correto, indique o nome. Abaixo, vai-lhe aparecer a metereologia para a localização dada.".format(cidade=info["name"]), parse_mode='Markdown')
             else:
                 bot.sendMessage(chat_id=chat_id,
                                 text="Não foi possivel guardar a localização. Por favor, tente "
@@ -85,7 +85,7 @@ def save_jornais(chat_id):
 
     cursor.execute("Update Users "
                    "set [Ids_jornais] = '{idsjornais}' "
-                   "wher [user_id] = {iduser} ;".format(iduser=chat_id,
+                   "where [user_id] = {iduser} ;".format(iduser=chat_id,
                                                         idsjornais=str(lista_idsjornais).replace("'", "")))
     connection.commit()
     bot.sendMessage(chat_id=chat_id,
@@ -155,117 +155,153 @@ if __name__ == '__main__':
             else:
                 pass
 
-        response = bot.getUpdates(offset=offset)
+        try:
+            response = bot.getUpdates(offset=offset)
 
-        if len(response) == 0:
-            pass
-        else:
-            chat_id = response[0]["message"]['from']['id']
-            cursor.execute("select user_id from Users where [user_id] = {userid} ;".format(userid=chat_id))
-            check_idbdsdada = cursor.fetchall()
-            print(check_idbdsdada)
-            if len(check_idbdsdada) > 0:
+            if len(response) == 0:
                 pass
             else:
-                nome = ""
-                try:
-                    nome = nome + str(response[0]['message']["chat"]["first_name"]) + " " + \
-                           response[0]['message']["chat"]["last_name"]
-                except:
-                    nome = nome + str(response[0]['message']["chat"]["first_name"])
-
-                cursor.execute("insert into Users ([user_id], [Name], [Ids_jornais]) "
-                               "values ({iduser}, '{nome}', '[1, 3, 4, 7, 9]');".format(iduser=chat_id,
-                                                                     nome=nome))
-                connection.commit()
-
-
-            try:
-                if response[0]['message']['text'] == '/start' or \
-                        response[0]['message']['text'] == '/ajuda' or \
-                        response[0]['message']['text'] == '/comecar' or response[0]['message']['text'] == 'Informação de utilização':
-                    start_menu(response[0]["message"]['from']['id'])
-
-                elif response[0]['message']['text'] == '/guardar_local_tempo' \
-                        or response[0]['message']['text'] == 'Guardar Localização':
-                    cursor.execute("Update Users "
-                                   "set [last_option] = 2 "
-                                   "wher [user_id] = {iduser} ;".format(iduser=chat_id))
-                    connection.commit()
-
-                    bot.sendMessage(chat_id=chat_id,
-                                    text="Para colocar a sua localização, basta escrever o local que pretende.\n"
-                                         "Se quiser, pode também enviar as suas coordenadas, clicando no "
-                                         "botão inferior esquerdo, e clicando em 'Localização'. \n\n"
-                                         "Caso queira mudar a sua localização, "
-                                         "basta fazer ***/guardar_local_tempo***.", parse_mode='Markdown')
-
-                elif response[0]['message']['text'] == '/modificar_jornais' \
-                        or response[0]['message']['text'] == 'Modificar Jornais':
-                    cursor.execute("Update Users "
-                                   "set [last_option] = 3 "
-                                   "wher [user_id] = {iduser} ;".format(iduser=chat_id))
-                    connection.commit()
-
-                    texto = showall_jornais()
-                    bot.sendMessage(chat_id=chat_id,
-                                    text=texto, parse_mode='Markdown')
-
-
-                elif response[0]['message']['text'] == '/obter_meterologia' \
-                        or response[0]['message']['text'] == 'Obter Metereologia':
-                    cursor.execute("select [Ids_jornais] from Users where [user_id] = {userid} ;".format(userid=chat_id))
-                    check_jornais = cursor.fetchone()[0]
-                    jornais = check_jornais.strip('][').split(', ')
-                    for jornal in jornais:
-                        bot.sendPhoto(chat_id=chat_id, photo=os.getcwd() + "/others/jornais\\" + str(jornal) + ".jpg")
-                        
-                elif response[0]['message']['text'] == '/obter_dadoscovid' \
-                        or response[0]['message']['text'] == 'Obter Dados Covid':
-                    dadoscovid = dados_covid()
-                    bot.sendMessage(chat_id=chat_id,
-                                    text=dadoscovid,
-                                    parse_mode='Markdown')
-                    
-
-
-                elif response[0]['message']['chat']['id'] == 519356699 and (response[0]['message']['text']).startswith(
-                        "Aviso:\n"):
-                    cursor.execute("select user_id from Users;")
-                    check_idbd = cursor.fetchall()
-                    for user in check_idbd:
-                        bot.sendMessage(chat_id=user[0],
-                                        text=((response[0]['message']['text'])[7:]).replace("*", "***"), parse_mode='Markdown')
-
-
-
+                chat_id = response[0]["message"]['from']['id']
+                cursor.execute("select user_id from Users where [user_id] = {userid} ;".format(userid=chat_id))
+                check_idbdsdada = cursor.fetchall()
+                print(check_idbdsdada)
+                if len(check_idbdsdada) > 0:
+                    pass
                 else:
-                    cursor.execute("select last_option from Users "
-                                   "where [user_id] = {userid} ;".format(userid=chat_id))
-                    check_idbd = cursor.fetchone()[0]
-                    if check_idbd == None:
-                        bot.sendMessage(chat_id=response[0]["message"]['from']['id'],
-                                text="De momento não é possivel obter a informação. Tente mais tarde",
-                                parse_mode='markdown')
+                    nome = ""
+                    try:
+                        nome = nome + str(response[0]['message']["chat"]["first_name"]) + " " + \
+                               response[0]['message']["chat"]["last_name"]
+                    except:
+                        nome = nome + str(response[0]['message']["chat"]["first_name"])
+
+                    cursor.execute("insert into Users ([user_id], [Name], [Ids_jornais]) "
+                                   "values ({iduser}, '{nome}', '[1, 3, 4, 7, 9]');".format(iduser=chat_id,
+                                                                         nome=nome))
+                    connection.commit()
+
+
+                try:
+                    if response[0]['message']['text'] == '/start' or \
+                            response[0]['message']['text'] == '/ajuda' or \
+                            response[0]['message']['text'] == '/comecar' or response[0]['message']['text'] == 'Informação de utilização':
+                        start_menu(response[0]["message"]['from']['id'])
+
+                    elif response[0]['message']['text'] == '/guardar_local_tempo' \
+                            or response[0]['message']['text'] == 'Guardar/Modificar Localização':
+                        cursor.execute("Update Users "
+                                       "set [last_option] = 2 "
+                                       "where [user_id] = {iduser} ;".format(iduser=chat_id))
+                        connection.commit()
+
+                        bot.sendMessage(chat_id=chat_id,
+                                        text="Para colocar a sua localização, basta escrever o local que pretende.\n"
+                                             "Se quiser, pode também enviar as suas coordenadas, clicando no "
+                                             "botão inferior esquerdo, e clicando em 'Localização'. \n\n"
+                                             "Caso queira mudar a sua localização, "
+                                             "basta fazer ***/guardar_local_tempo***.", parse_mode='Markdown')
+
+                    elif response[0]['message']['text'] == '/modificar_jornais' \
+                            or response[0]['message']['text'] == 'Modificar Jornais':
+                        cursor.execute("Update Users "
+                                       "set [last_option] = 3 "
+                                       "where [user_id] = {iduser} ;".format(iduser=chat_id))
+                        connection.commit()
+
+                        texto = showall_jornais()
+                        bot.sendMessage(chat_id=chat_id,
+                                        text=texto, parse_mode='Markdown')
+
+
+                    elif response[0]['message']['text'] == '/obter_meterologia' \
+                            or response[0]['message']['text'] == 'Obter Metereologia':
+                        cursor.execute("select [Loc_Meterologia] from Users where [user_id] = {userid} ;".format(userid=chat_id))
+                        check_local = cursor.fetchone()[0]
+                        if check_local == None:
+                            bot.sendMessage(chat_id=chat_id,
+                                            text="Não tem nenhuma localização predifinida. Por favor, use o comando /guardar_local_tempo para configurar.",
+                                            parse_mode='Markdown')
+                        try:
+                            weather_now = get_weather_city(check_local)
+                            meterologia = get_forecast_city(check_local)
+
+                            bot.sendMessage(chat_id=chat_id,
+                                            text=weather_now,
+                                            parse_mode='Markdown')
+
+                            bot.sendMessage(chat_id=chat_id,
+                                            text=meterologia,
+                                            parse_mode='Markdown')
+
+                        except:
+                            bot.sendMessage(chat_id=chat_id,
+                                            text="A metereologia não está disponivel de momento. Por favor, tente mais tarde.",
+                                            parse_mode='Markdown')
+                        
+                            
+                    elif response[0]['message']['text'] == '/obter_jornais' \
+                            or response[0]['message']['text'] == 'Obter Jornais':
+                        cursor.execute("select [Ids_jornais] from Users where [user_id] = {userid} ;".format(userid=chat_id))
+                        check_jornais = cursor.fetchone()[0]
+                        try:
+                            jornais = check_jornais.strip('][').split(', ')
+                            for jornal in jornais:
+                                bot.sendPhoto(chat_id=chat_id, photo=os.getcwd() + "/others/jornais/" + str(jornal) + ".jpg")
+                        except:
+                            download_jornais()
+                            jornais = check_jornais.strip('][').split(', ')
+                            for jornal in jornais:
+                                bot.sendPhoto(chat_id=chat_id, photo=os.getcwd() + "/others/jornais/" + str(jornal) + ".jpg")
+                            
+                            
+                    elif response[0]['message']['text'] == '/obter_dadoscovid' \
+                            or response[0]['message']['text'] == 'Obter Dados Covid':
+                        dadoscovid = dados_covid()
+                        bot.sendMessage(chat_id=chat_id,
+                                        text=dadoscovid,
+                                        parse_mode='Markdown')
+                        
+
+
+                    elif response[0]['message']['chat']['id'] == 519356699 and (response[0]['message']['text']).startswith(
+                            "Aviso:\n"):
+                        cursor.execute("select user_id from Users;")
+                        check_idbd = cursor.fetchall()
+                        for user in check_idbd:
+                            bot.sendMessage(chat_id=user[0],
+                                            text=((response[0]['message']['text'])[7:]).replace("*", "***"), parse_mode='Markdown')
+
+
+
                     else:
-                        if int(check_idbd) == 2:
-                            save_locationweather(chat_id)
-                        elif int(check_idbd) == 3:
-                            save_jornais(chat_id)
+                        cursor.execute("select last_option from Users "
+                                       "where [user_id] = {userid} ;".format(userid=chat_id))
+                        check_idbd = cursor.fetchone()[0]
+                        if check_idbd == None:
+                            bot.sendMessage(chat_id=response[0]["message"]['from']['id'],
+                                    text="De momento não é possivel obter a informação. Tente mais tarde",
+                                    parse_mode='markdown')
                         else:
-                            pass
+                            if int(check_idbd) == 2:
+                                save_locationweather(chat_id)
+                            elif int(check_idbd) == 3:
+                                save_jornais(chat_id)
+                            else:
+                                pass
 
-            except:
-                bot.sendMessage(chat_id=response[0]["message"]['from']['id'],
-                                text="De momento não é possivel obter a informação. Tente mais tarde",
-                                parse_mode='markdown')
-                error = str(traceback.format_exc())
-                f = open("log_file.txt", "w")
-                f.write(error + "\n\n\n")
-                f.close()
+                except:
+                    bot.sendMessage(chat_id=response[0]["message"]['from']['id'],
+                                    text="De momento não é possivel obter a informação. Tente mais tarde",
+                                    parse_mode='markdown')
+                    error = str(traceback.format_exc())
+                    f = open("log_file.txt", "w")
+                    f.write(error + "\n\n\n")
+                    f.close()
 
-        if response:
-            try:
-                offset = response[-1]["update_id"] + 1  # penso que isto é para não receber as mensagens antigas
-            except IndexError:
-                pass
+            if response:
+                try:
+                    offset = response[-1]["update_id"] + 1  # penso que isto é para não receber as mensagens antigas
+                except IndexError:
+                    pass
+        except:
+            pass
