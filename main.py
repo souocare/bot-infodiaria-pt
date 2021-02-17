@@ -17,7 +17,7 @@ load_dotenv()
 
 def start_menu(chatid):
     markup = telepot.namedtuple.ReplyKeyboardMarkup(
-        keyboard=[["Informação de utilização"], ['Guardar/Modificar Localização'], ["Modificar Jornais"], ["Obter Metereologia"], ["Obter Dados Covid"], ["Obter Jornais"]])
+        keyboard=[["Informação de utilização"], ['Guardar/Modificar Localização'], ["Modificar Jornais"], ["Obter Meteorologia"], ["Obter Dados Covid"], ["Obter Jornais"]])
 
     bot.sendMessage(chat_id=chatid,
                     text="Bem-vindo ao Bot das informações diárias. As informações diárias são enviadas diáriamente, "
@@ -214,8 +214,8 @@ if __name__ == '__main__':
                                         text=texto, parse_mode='Markdown')
 
 
-                    elif response[0]['message']['text'] == '/obter_meterologia' \
-                            or response[0]['message']['text'] == 'Obter Metereologia':
+                    elif response[0]['message']['text'] == '/obter_meteorologia' \
+                            or response[0]['message']['text'] == 'Obter Meteorologia':
                         cursor.execute("select [Loc_Meterologia] from Users where [user_id] = {userid} ;".format(userid=chat_id))
                         check_local = cursor.fetchone()[0]
                         if check_local == None:
