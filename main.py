@@ -102,18 +102,20 @@ cursor = connection.cursor()
 
 bot = telepot.Bot(token=os.getenv('Telegram_Token')) #normal
 
+covidtoday = 0
+
 if __name__ == '__main__':
     offset = 0
     while True:
         now = datetime.datetime.now()
 
-        if int(now.hour) == 7 and int(now.hour) == 0 and int(now.hour) == 0:
+        if int(now.hour) == 7 and int(now.minute) == 0 and int(now.second) == 0:
             for file in os.listdir(os.getcwd() + "/others/jornais"):
                 if file.endswith('.jpg'):
                     os.remove(file)
             download_jornais()
 
-        if int(now.hour) == 9 and int(now.hour) == 0 and int(now.hour) == 0:
+        if int(now.hour) == 9 and int(now.minute) == 0 and int(now.second) == 0:
             cursor.execute("select user_id, [Name] ,[Loc_Meterologia], [Ids_jornais]  from Users;")
             check_idbd = cursor.fetchall()
             if len(check_idbd) > 0:
@@ -155,6 +157,31 @@ if __name__ == '__main__':
 
             else:
                 pass
+        
+        if (int(now.hour) == 15 and int(now.minute) == 0 and int(now.second) == 0) or
+           (int(now.hour) == 15 and int(now.minute) == 15 and int(now.second) == 0) or
+           (int(now.hour) == 15 and int(now.minute) == 30 and int(now.second) == 0) or
+           (int(now.hour) == 15 and int(now.minute) == 45 and int(now.second) == 0) or
+           (int(now.hour) == 16 and int(now.minute) == 0 and int(now.second) == 0) or
+           (int(now.hour) == 16 and int(now.minute) == 15 and int(now.second) == 0) or
+           (int(now.hour) == 16 and int(now.minute) == 30 and int(now.second) == 0) or
+           (int(now.hour) == 16 and int(now.minute) == 45 and int(now.second) == 0) or
+           (int(now.hour) == 17 and int(now.minute) == 45 and int(now.second) == 0):
+            if covidtoday == 0:
+                dadoscovid = dados_covid()
+                if dadoscovid == 'Erro':
+                    pass
+                else:
+                    bot.sendMessage(chat_id=user[0],
+                                        text=dadoscovid,
+                                        parse_mode='Markdown')
+                    covidtoday = 1
+            else:
+                pass
+        
+
+                
+            
 
         try:
             response = bot.getUpdates(offset=offset)
