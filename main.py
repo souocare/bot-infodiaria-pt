@@ -5,7 +5,7 @@ import telepot
 import telepot.namedtuple
 from others.weather import get_weatherinicialcity, get_weatheriniciallatlon, get_forecast_city, get_weather_city
 from others.jornais import showall_jornais, download_jornais
-from others.covid_dados import dados_covid
+from others.covid_dados import dados_covid, dados_covidinfodiaria
 ######
 import traceback
 import datetime
@@ -103,17 +103,31 @@ cursor = connection.cursor()
 bot = telepot.Bot(token=os.getenv('Telegram_Token')) #normal
 
 covidtoday = 0
+downloadjornaisverificacao = 0
+
 
 if __name__ == '__main__':
     offset = 0
     while True:
         now = datetime.datetime.now()
+        
+        if int(now.hour) == 6 and int(downloadjornaisverificacao) == 1:
+            print("downloadjornaisverificacao as 6 da manhã:\nAntes:")
+            print(downloadjornaisverificacao)
+            downloadjornaisverificacao = 0
+            print("Depois:")
+            print(downloadjornaisverificacao)
 
-        if int(now.hour) == 7 and int(now.minute) == 0 and int(now.second) == 0:
+        if int(now.hour) == 7 and int(downloadjornaisverificacao) == 0:
             for file in os.listdir(os.getcwd() + "/others/jornais"):
                 if file.endswith('.jpg'):
-                    os.remove(file)
+                    os.remove(os.getcwd() + "/others/jornais/" + file)
             download_jornais()
+            print("downloadjornaisverificacao as 7 da manhã:\nAntes:")
+            print(downloadjornaisverificacao)
+            downloadjornaisverificacao = 1
+            print("Depois:")
+            print(downloadjornaisverificacao)
 
         if int(now.hour) == 9 and int(now.minute) == 0 and int(now.second) == 0:
             cursor.execute("select user_id, [Name] ,[Loc_Meterologia], [Ids_jornais]  from Users;")
@@ -158,17 +172,17 @@ if __name__ == '__main__':
             else:
                 pass
         
-        if (int(now.hour) == 15 and int(now.minute) == 0 and int(now.second) == 0) or
-           (int(now.hour) == 15 and int(now.minute) == 15 and int(now.second) == 0) or
-           (int(now.hour) == 15 and int(now.minute) == 30 and int(now.second) == 0) or
-           (int(now.hour) == 15 and int(now.minute) == 45 and int(now.second) == 0) or
-           (int(now.hour) == 16 and int(now.minute) == 0 and int(now.second) == 0) or
-           (int(now.hour) == 16 and int(now.minute) == 15 and int(now.second) == 0) or
-           (int(now.hour) == 16 and int(now.minute) == 30 and int(now.second) == 0) or
-           (int(now.hour) == 16 and int(now.minute) == 45 and int(now.second) == 0) or
-           (int(now.hour) == 17 and int(now.minute) == 45 and int(now.second) == 0):
+        if (int(now.hour) == 15 and int(now.minute) == 0 and int(now.second) == 0) or (
+                int(now.hour) == 15 and int(now.minute) == 15 and int(now.second) == 0) or (
+                int(now.hour) == 15 and int(now.minute) == 30 and int(now.second) == 0) or (
+                int(now.hour) == 15 and int(now.minute) == 45 and int(now.second) == 0) or (
+                int(now.hour) == 16 and int(now.minute) == 0 and int(now.second) == 0) or (
+                int(now.hour) == 16 and int(now.minute) == 15 and int(now.second) == 0) or (
+                int(now.hour) == 16 and int(now.minute) == 30 and int(now.second) == 0) or (
+                int(now.hour) == 16 and int(now.minute) == 45 and int(now.second) == 0) or (
+                int(now.hour) == 17 and int(now.minute) == 45 and int(now.second) == 0):
             if covidtoday == 0:
-                dadoscovid = dados_covid()
+                dadoscovid = dados_covidinfodiaria()
                 if dadoscovid == 'Erro':
                     pass
                 else:
