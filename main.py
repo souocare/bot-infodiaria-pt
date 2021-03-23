@@ -178,9 +178,14 @@ if __name__ == '__main__':
                 if dadoscovid == 'Erro':
                     pass
                 else:
-                    bot.sendMessage(chat_id=user[0],
-                                        text=dadoscovid,
-                                        parse_mode='Markdown')
+                    cursor.execute("select user_id, [Name] ,[Loc_Meterologia], [Ids_jornais]  from Users;")
+                    check_idbd = cursor.fetchall()
+                    if len(check_idbd) > 0:
+                        dadoscovid = dados_covid()
+                        for user in check_idbd:
+                            bot.sendMessage(chat_id=user[0],
+                                                text=dadoscovid,
+                                                parse_mode='Markdown')
                     covidtoday = 1
             else:
                 pass
