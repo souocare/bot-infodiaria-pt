@@ -112,22 +112,14 @@ if __name__ == '__main__':
         now = datetime.datetime.now()
         
         if int(now.hour) == 6 and int(downloadjornaisverificacao) == 1:
-            print("downloadjornaisverificacao as 6 da manhã:\nAntes:")
-            print(downloadjornaisverificacao)
             downloadjornaisverificacao = 0
-            print("Depois:")
-            print(downloadjornaisverificacao)
 
         if int(now.hour) == 7 and int(downloadjornaisverificacao) == 0:
             for file in os.listdir(os.getcwd() + "/others/jornais"):
                 if file.endswith('.jpg'):
                     os.remove(os.getcwd() + "/others/jornais/" + file)
             download_jornais()
-            print("downloadjornaisverificacao as 7 da manhã:\nAntes:")
-            print(downloadjornaisverificacao)
             downloadjornaisverificacao = 1
-            print("Depois:")
-            print(downloadjornaisverificacao)
 
         if int(now.hour) == 9 and int(now.minute) == 0 and int(now.second) == 0:
             cursor.execute("select user_id, [Name] ,[Loc_Meterologia], [Ids_jornais]  from Users;")
@@ -142,7 +134,7 @@ if __name__ == '__main__':
                                     parse_mode='Markdown')
 
                     for jornal in jornais:
-                        pf = open(os.getcwd() + "/others/jornais/" + str(jornal) + ".jpg", mode="rb")
+                        pf = open(os.getcwd() + "/others/jornais/" + str(jornal).replace(" ", "") + ".jpg", mode="rb")
                         bot.sendPhoto(chat_id=user[0], photo=pf)
                         
                     if user[2] == None:
@@ -288,13 +280,13 @@ if __name__ == '__main__':
                         try:
                             jornais = check_jornais.strip('][').split(', ')
                             for jornal in jornais:
-                                pf = open(os.getcwd() + "/others/jornais/" + str(jornal) + ".jpg", mode="rb")
+                                pf = open(os.getcwd() + "/others/jornais/" + str(jornal).replace(" ", "") + ".jpg", mode="rb")
                                 bot.sendPhoto(chat_id=chat_id, photo=pf)
                         except:
                             download_jornais()
                             jornais = check_jornais.strip('][').split(', ')
                             for jornal in jornais:
-                                pf = open(os.getcwd() + "/others/jornais/" + str(jornal) + ".jpg", mode="rb")
+                                pf = open(os.getcwd() + "/others/jornais/" + str(jornal).replace(" ", "") + ".jpg", mode="rb")
                                 bot.sendPhoto(chat_id=chat_id, photo=pf)
                             
                             
