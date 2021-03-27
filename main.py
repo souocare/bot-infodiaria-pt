@@ -104,6 +104,7 @@ bot = telepot.Bot(token=os.getenv('Telegram_Token')) #normal
 
 covidtoday = 0
 downloadjornaisverificacao = 0
+envioinfodiaria = 0
 
 
 if __name__ == '__main__':
@@ -111,8 +112,9 @@ if __name__ == '__main__':
     while True:
         now = datetime.datetime.now()
         
-        if int(now.hour) == 6 and int(downloadjornaisverificacao) == 1:
+        if int(now.hour) == 6 and  int(now.minute) == 1:
             downloadjornaisverificacao = 0
+            envioinfodiaria = 0
 
         if int(now.hour) == 7 and int(downloadjornaisverificacao) == 0:
             for file in os.listdir(os.getcwd() + "/others/jornais"):
@@ -121,7 +123,8 @@ if __name__ == '__main__':
             download_jornais()
             downloadjornaisverificacao = 1
 
-        if int(now.hour) == 9 and int(now.minute) == 0 and int(now.second) == 0:
+        if int(now.hour) == 9 and int(envioinfodiaria) == 0:
+            print("Envio diário comecou")
             cursor.execute("select user_id, [Name] ,[Loc_Meterologia], [Ids_jornais]  from Users;")
             check_idbd = cursor.fetchall()
             if len(check_idbd) > 0:
@@ -160,9 +163,12 @@ if __name__ == '__main__':
                     bot.sendMessage(chat_id=user[0],
                                     text=dadoscovid,
                                     parse_mode='Markdown')
+                print("Dados enviados!")
 
             else:
                 pass
+            
+            envioinfodiaria = 1
         
         if (int(now.hour) == 15 and int(now.minute) == 0 and int(now.second) == 0) or (
                 int(now.hour) == 15 and int(now.minute) == 15 and int(now.second) == 0) or (
