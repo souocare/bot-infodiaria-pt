@@ -1,5 +1,5 @@
 # bot-infodiaria-pt
-A telegram bot that gives diary information about various things, specially journals first pages of the day, weather, and right now, daily information about Covid-19.
+A telegram bot that gives daily information about various things, specially journals first pages of the day, weather, and right now, daily information about Covid-19.
 
 # Why was this project created?
 Because I wanted an app, or a bot that I could get all the information about in one place. And specially being automated. 
